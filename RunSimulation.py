@@ -1,14 +1,18 @@
-import disksInBox as util
+import disksInBoxUtility as util
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 import pandas as pd
 
-L = 50
+print('Make sure that all the referred folders exist!')
+
+L = 100
 N = 500
 r = 0.5
-a = 0.5 * r # for noP2 it was = 1
+a = 1.5 * r
+
+OutputName = 'Sample'
 
 fig = plt.figure()
 ax = fig.gca()
@@ -43,11 +47,9 @@ for k in range(0, 10000000000):
         plt.title('Iteration: ' + str(k))
         plt.xlabel('x')
         plt.ylabel('y')
-        filename = 'images/e22/' + str(k)+'.png'
+        filename = './images/' + OutputName + '/' + str(k)+'.png'
         fig.savefig(filename)
         
-    
-    #if k % 1000 == 0:
         meanDistance = 0
         amountD = 0
         for m in range(0, len(d)):
@@ -61,13 +63,13 @@ for k in range(0, 10000000000):
                 MSD += (d[m][n] - meanDistance)**2
         MSD /= amountD
         dataToSave.append([meanDistance, MSD, sum(e)])
-        #print("k: ", k)
+
         df = pd.DataFrame(dataToSave, columns=["E[d]", "Var[d]", "Energy"])
         if firstTime:
-            df.to_csv('e22.csv', index=False)
+            df.to_csv(OutputName + '.csv', index=False)
             firstTime = False
         else:
-            df.to_csv('e22.csv', mode='a', index=False, header=False)
+            df.to_csv(OutputName + 'csv', mode='a', index=False, header=False)
         dataToSave = []
 
     [state, d, e] = util.updateDisksInBox(state, d, e, L, N, r, a, 0.5)
